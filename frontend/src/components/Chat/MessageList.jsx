@@ -19,7 +19,7 @@ export default function MessageList({ messages, loading, onLoadMore, hasMore }) 
   }
 
   return (
-    <div className="flex-1 overflow-y-auto px-4 py-4 sm:px-6">
+    <div className="flex-1 overflow-y-auto px-4 py-5 sm:px-6">
       {hasMore ? (
         <div className="mb-4 flex justify-center">
           <button
@@ -37,14 +37,14 @@ export default function MessageList({ messages, loading, onLoadMore, hasMore }) 
           return (
             <article key={message._id} className={`flex ${mine ? 'justify-end' : 'justify-start'}`}>
               <div
-                className={`max-w-[85%] rounded-[1.25rem] px-4 py-3 shadow-sm ${
+                className={`max-w-[88%] rounded-[1.4rem] px-4 py-3 shadow-sm ring-1 ${
                   mine
-                    ? 'bg-gradient-to-br from-accent-500 to-accent-600 text-white'
-                    : 'border border-white/10 bg-white/5 text-slate-100'
+                    ? 'bg-gradient-to-br from-accent-500 to-cyan-500 text-white ring-white/10'
+                    : 'border border-white/10 bg-white/5 text-slate-100 ring-white/5'
                 }`}
               >
                 {!mine ? (
-                  <div className="mb-2 text-xs font-medium uppercase tracking-[0.25em] text-slate-400">
+                  <div className="mb-2 text-[11px] font-medium uppercase tracking-[0.25em] text-slate-400">
                     {message.sender?.username || 'Unknown'}
                   </div>
                 ) : null}

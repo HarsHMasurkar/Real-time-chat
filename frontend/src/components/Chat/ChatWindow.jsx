@@ -18,7 +18,7 @@ export default function ChatWindow() {
   } = useChat();
 
   return (
-    <div className="flex h-full flex-col bg-[#0a1322]">
+    <div className="flex h-full flex-col bg-[linear-gradient(180deg,rgba(10,19,34,0.96),rgba(7,17,31,0.98))]">
       <ChatHeader chat={selectedChat} typingUsers={typingUsers} onlineUsers={onlineUsers} />
       <MessageList
         messages={messages}

@@ -35,8 +35,8 @@ export default function MessageInput({ onSend, onTyping, onStopTyping, disabled,
   };
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-white/10 p-4 sm:p-6">
-      <div className="flex items-end gap-3">
+    <form onSubmit={handleSubmit} className="border-t border-white/10 bg-white/5 p-4 sm:p-6 backdrop-blur-xl">
+      <div className="flex items-end gap-3 rounded-[1.75rem] border border-white/10 bg-slate-950/40 p-3 shadow-glow">
         <textarea
           value={value}
           onChange={handleChange}
@@ -48,7 +48,7 @@ export default function MessageInput({ onSend, onTyping, onStopTyping, disabled,
         <button
           type="submit"
           disabled={disabled}
-          className="rounded-2xl bg-accent-500 px-5 py-3 text-sm font-medium text-white transition hover:bg-accent-400 disabled:cursor-not-allowed disabled:opacity-60"
+          className="rounded-2xl bg-gradient-to-r from-accent-500 to-cyan-500 px-5 py-3 text-sm font-medium text-white transition hover:from-accent-400 hover:to-cyan-400 disabled:cursor-not-allowed disabled:opacity-60"
         >
           Send
         </button>

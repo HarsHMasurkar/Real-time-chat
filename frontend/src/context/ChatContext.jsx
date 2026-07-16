@@ -95,7 +95,7 @@ export function ChatProvider({ children }) {
   const createDirectChat = async (userId) => {
     const response = await api.post('/chats', { userId });
     const chat = response.data.chat;
-    setSelectedChat(chat);
+    await selectChat(chat);
     await loadChats();
     return chat;
   };
