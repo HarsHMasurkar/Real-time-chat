@@ -1,0 +1,28 @@
+module.exports = {
+  BCRYPT_SALT_ROUNDS: 12,
+  MESSAGES_PER_PAGE: 50,
+  CHATS_PER_PAGE: 20,
+  USERS_PER_PAGE: 20,
+  MAX_GROUP_MEMBERS: 100,
+  MAX_MESSAGE_LENGTH: 5000,
+  MAX_GROUP_NAME_LENGTH: 50,
+  TYPING_TIMEOUT: 3000,
+  // Socket events
+  SOCKET_EVENTS: {
+    CONNECTION: 'connection',
+    DISCONNECT: 'disconnect',
+    JOIN_CHAT: 'join-chat',
+    LEAVE_CHAT: 'leave-chat',
+    SEND_MESSAGE: 'send-message',
+    RECEIVE_MESSAGE: 'receive-message',
+    MESSAGE_EDITED: 'message-edited',
+    MESSAGE_DELETED: 'message-deleted',
+    USER_TYPING: 'user-typing',
+    STOP_TYPING: 'stop-typing',
+    USER_STATUS: 'user-status',
+    USER_JOINED: 'user-joined',
+    USER_LEFT: 'user-left',
+    ERROR: 'error',
+    MESSAGES_READ: 'messages-read',
+  },
+};
