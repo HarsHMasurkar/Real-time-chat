@@ -10,6 +10,18 @@ const onlineUsers = new Map();
 const userSocketMap = new Map();
 
 const setupSocket = (io) => {
+  const updatePresence = async (userId, isOnline) => {
+    try {
+      await User.findByIdAndUpdate(userId, {
+        isOnline,
+        lastSeen: new Date(),
+      });
+    } catch (error) {
+      // Network/DNS hiccups to Atlas should not crash the realtime gateway.
+      console.error('Presence update error:', error.message);
+    }
+  };
+
   // Authentication middleware for Socket.io
   io.use(async (socket, next) => {
     try {
@@ -42,11 +54,8 @@ const setupSocket = (io) => {
     });
     userSocketMap.set(socket.userId, socket.id);
 
-    // Update user status in DB
-    await User.findByIdAndUpdate(socket.userId, {
-      isOnline: true,
-      lastSeen: new Date(),
-    });
+    // Update user status in DB (best effort).
+    await updatePresence(socket.userId, true);
 
     // Broadcast user online status
     socket.broadcast.emit(SOCKET_EVENTS.USER_STATUS, {
@@ -242,11 +251,8 @@ const setupSocket = (io) => {
       onlineUsers.delete(socket.id);
       userSocketMap.delete(socket.userId);
 
-      // Update user status in DB
-      await User.findByIdAndUpdate(socket.userId, {
-        isOnline: false,
-        lastSeen: new Date(),
-      });
+      // Update user status in DB (best effort).
+      await updatePresence(socket.userId, false);
 
       // Broadcast user offline status
       socket.broadcast.emit(SOCKET_EVENTS.USER_STATUS, {
