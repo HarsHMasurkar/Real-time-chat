@@ -9,14 +9,20 @@ export default function Sidebar() {
   const {
     chats,
     users,
+    publicGroups,
     loadingChats,
     loadingUsers,
+    loadingPublicGroups,
     selectedChat,
     createDirectChat,
+    createPublicGroup,
+    joinPublicGroup,
     selectChat,
     loadUsers,
   } = useChat();
   const [search, setSearch] = useState('');
+  const [groupName, setGroupName] = useState('');
+  const [creatingGroup, setCreatingGroup] = useState(false);
 
   const filteredUsers = useMemo(
     () => users.filter((candidate) => candidate._id !== user?._id),
@@ -31,6 +37,22 @@ export default function Sidebar() {
     const value = event.target.value;
     setSearch(value);
     await loadUsers(value);
+  };
+
+  const handleCreatePublicGroup = async (event) => {
+    event.preventDefault();
+    const name = groupName.trim();
+    if (!name) {
+      return;
+    }
+
+    try {
+      setCreatingGroup(true);
+      await createPublicGroup({ chatName: name });
+      setGroupName('');
+    } finally {
+      setCreatingGroup(false);
+    }
   };
 
   return (
@@ -192,6 +214,61 @@ export default function Sidebar() {
             </div>
           </section>
         ) : null}
+
+        <section className="mt-6 rounded-[1.5rem] border border-white/10 bg-white/5 p-3">
+          <div className="mb-3 px-2 text-xs font-semibold uppercase tracking-[0.3em] text-slate-400">
+            Public Groups
+          </div>
+
+          <form onSubmit={handleCreatePublicGroup} className="mb-3 flex gap-2 px-2">
+            <input
+              value={groupName}
+              onChange={(event) => setGroupName(event.target.value)}
+              placeholder="Create a group"
+              className="w-full rounded-xl border border-white/10 bg-slate-950/40 px-3 py-2 text-sm text-white outline-none transition placeholder:text-slate-500 focus:border-accent-400"
+            />
+            <button
+              type="submit"
+              disabled={creatingGroup}
+              className="rounded-xl bg-accent-500 px-3 py-2 text-xs font-medium text-white transition hover:bg-accent-400 disabled:opacity-60"
+            >
+              {creatingGroup ? '...' : 'Create'}
+            </button>
+          </form>
+
+          {loadingPublicGroups ? <LoadingSpinner label="Loading groups" /> : null}
+
+          <div className="space-y-2">
+            {publicGroups.map((group) => {
+              const isMember = group.members?.some((member) => member._id === user?._id);
+              const isActive = selectedChat?._id === group._id;
+
+              return (
+                <div
+                  key={group._id}
+                  className={`rounded-[1.25rem] border px-3 py-3 transition ${
+                    isActive
+                      ? 'border-accent-400/50 bg-accent-500/15 text-white'
+                      : 'border-white/10 bg-slate-950/35 text-slate-200'
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-2">
+                    <div>
+                      <div className="font-medium">{group.chatName || 'Public group'}</div>
+                      <div className="mt-1 text-xs text-slate-400">{group.members?.length || 0} members</div>
+                    </div>
+                    <button
+                      onClick={() => (isMember ? selectChat(group) : joinPublicGroup(group._id))}
+                      className="rounded-lg border border-white/10 px-3 py-1.5 text-xs transition hover:border-white/25 hover:bg-white/10"
+                    >
+                      {isMember ? 'Open' : 'Join'}
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </section>
       </div>
     </aside>
   );

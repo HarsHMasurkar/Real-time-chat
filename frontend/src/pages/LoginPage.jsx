@@ -7,16 +7,11 @@ export default function LoginPage() {
         <div>
           <p className="text-xs uppercase tracking-[0.4em] text-accent-200/80">Realtime Chat</p>
           <h1 className="mt-6 max-w-xl text-5xl font-semibold leading-tight">
-            Fast messaging with a sharp, modern interface.
+            Sign in to continue.
           </h1>
           <p className="mt-6 max-w-lg text-sm leading-6 text-slate-300">
-            Direct chats, presence, typing, and history, wrapped in a focused, high-contrast UI.
+            Access your messages and conversations from one place.
           </p>
-        </div>
-        <div className="grid max-w-xl grid-cols-3 gap-4 text-sm text-slate-300">
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur">JWT auth</div>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur">1:1 chat</div>
-          <div className="rounded-3xl border border-white/10 bg-white/5 p-4 backdrop-blur">Responsive UI</div>
         </div>
       </div>
 

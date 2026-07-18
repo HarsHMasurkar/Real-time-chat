@@ -16,9 +16,11 @@ export function ChatProvider({ children }) {
   const [selectedChat, setSelectedChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [users, setUsers] = useState([]);
+  const [publicGroups, setPublicGroups] = useState([]);
   const [loadingChats, setLoadingChats] = useState(false);
   const [loadingMessages, setLoadingMessages] = useState(false);
   const [loadingUsers, setLoadingUsers] = useState(false);
+  const [loadingPublicGroups, setLoadingPublicGroups] = useState(false);
   const [typingUsers, setTypingUsers] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [messagePage, setMessagePage] = useState(DEFAULT_MESSAGE_PAGE);
@@ -55,6 +57,20 @@ export function ChatProvider({ children }) {
       setUsers(response.data.users || []);
     } finally {
       setLoadingUsers(false);
+    }
+  };
+
+  const loadPublicGroups = async (search = '') => {
+    if (!token) {
+      return;
+    }
+
+    setLoadingPublicGroups(true);
+    try {
+      const response = await api.get('/chats/group/public', { params: { search } });
+      setPublicGroups(response.data.groups || []);
+    } finally {
+      setLoadingPublicGroups(false);
     }
   };
 
@@ -104,6 +120,24 @@ export function ChatProvider({ children }) {
     const response = await api.post('/chats/group', { chatName, members });
     await loadChats();
     return response.data.chat;
+  };
+
+  const createPublicGroup = async ({ chatName, description = '' }) => {
+    const response = await api.post('/chats/group/public', { chatName, description });
+    const chat = response.data.chat;
+    await loadChats();
+    await loadPublicGroups();
+    await selectChat(chat);
+    return chat;
+  };
+
+  const joinPublicGroup = async (chatId) => {
+    const response = await api.post(`/chats/group/${chatId}/join`);
+    const chat = response.data.chat;
+    await loadChats();
+    await loadPublicGroups();
+    await selectChat(chat);
+    return chat;
   };
 
   const sendMessage = async (content) => {
@@ -175,6 +209,7 @@ export function ChatProvider({ children }) {
       setSelectedChat(null);
       setMessages([]);
       setUsers([]);
+      setPublicGroups([]);
       setTypingUsers([]);
       setOnlineUsers([]);
       return;
@@ -182,6 +217,7 @@ export function ChatProvider({ children }) {
 
     loadChats();
     loadUsers();
+    loadPublicGroups();
   }, [token]);
 
   useEffect(() => {
@@ -313,9 +349,11 @@ export function ChatProvider({ children }) {
       selectedChat,
       messages,
       users,
+      publicGroups,
       loadingChats,
       loadingMessages,
       loadingUsers,
+      loadingPublicGroups,
       typingUsers,
       onlineUsers,
       messagePagination,
@@ -324,11 +362,14 @@ export function ChatProvider({ children }) {
       setSelectedChat,
       loadChats,
       loadUsers,
+      loadPublicGroups,
       loadMessages,
       loadMoreMessages,
       selectChat,
       createDirectChat,
       createGroupChat,
+      createPublicGroup,
+      joinPublicGroup,
       sendMessage,
       editMessage,
       deleteMessage,
@@ -341,9 +382,11 @@ export function ChatProvider({ children }) {
       selectedChat,
       messages,
       users,
+      publicGroups,
       loadingChats,
       loadingMessages,
       loadingUsers,
+      loadingPublicGroups,
       typingUsers,
       onlineUsers,
       messagePagination,

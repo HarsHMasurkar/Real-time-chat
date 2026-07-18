@@ -11,6 +11,10 @@ const chatSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isPublic: {
+      type: Boolean,
+      default: false,
+    },
     members: [
       {
         type: mongoose.Schema.Types.ObjectId,
@@ -44,5 +48,6 @@ const chatSchema = new mongoose.Schema(
 chatSchema.index({ members: 1 });
 chatSchema.index({ updatedAt: -1 });
 chatSchema.index({ isGroupChat: 1, members: 1 });
+chatSchema.index({ isGroupChat: 1, isPublic: 1, updatedAt: -1 });
 
 module.exports = mongoose.model('Chat', chatSchema);
